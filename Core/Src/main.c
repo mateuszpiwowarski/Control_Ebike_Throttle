@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
 #include "i2c.h"
 #include "tim.h"
 #include "gpio.h"
@@ -26,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "MCP4725.h"
 #include "stdio.h"
-
+#include "ThrottleADC.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,6 +50,7 @@
 /* USER CODE BEGIN PV */
 MCP4725 myDAC;
 float outputVoltage;
+float adc_val;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,7 +95,10 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C2_Init();
   MX_TIM1_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+
+  Throttle_Get_ADC_Value(&hadc1);
 
   /* Initialize I2C */
    I2C_HandleTypeDef hi2c;
@@ -101,12 +106,6 @@ int main(void)
 
    /* Initialize DAC */
    myDAC = MCP4725_init(&hi2c2, MCP4725A0_ADDR_A00, MCP4725_REFERENCE_VOLTAGE);
-
-//   /* Check connection with DAC */
-//   if (!MCP4725_isConnected(&myDAC))
-//   {
-//       // Handle error
-//   }
 
    /* Check connection with DAC */
    if (!MCP4725_isConnected(&myDAC))
@@ -125,26 +124,13 @@ int main(void)
   while (1)
   {
 
-	  /* Set output voltage to 1V */
-	      outputVoltage = 1.0;
-	      if (!MCP4725_setVoltage(&myDAC, outputVoltage, MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF)) {
-	        /* Handle error */
-	  	}
-	      HAL_Delay(5000);  /* Wait for 5 seconds */
-
-	      /* Set output voltage to 3V */
-	      outputVoltage = 3.0;
-	      if (!MCP4725_setVoltage(&myDAC, outputVoltage, MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF)) {
-	        /* Handle error */
-	  	}
-	      HAL_Delay(5000);  /* Wait for 5 seconds */
-
-	      /* Set output voltage to 4.5V */
-	      outputVoltage = 4.5;
-	      if (!MCP4725_setVoltage(&myDAC, outputVoltage, MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF)) {
-	        /* Handle error */
-	  	}
-	      HAL_Delay(5000);  /* Wait for 5 seconds */
+	    outputVoltage = Throttle_Get_Voltage(&hadc1);
+	    adc_val = Throttle_Get_ADC_Value(&hadc1);
+	    if (!MCP4725_setVoltage(&myDAC, outputVoltage , MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF))
+	    {
+	      /* Handle error */
+	    }
+	    HAL_Delay(20);  /* 20 ms delay for smoother control */
 
 
 
