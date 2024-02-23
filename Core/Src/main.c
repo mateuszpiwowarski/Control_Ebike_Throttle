@@ -50,7 +50,7 @@
 /* USER CODE BEGIN PV */
 MCP4725 myDAC;
 float outputVoltage;
-float adc_val;
+uint32_t adc_val;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,8 +98,6 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
-  Throttle_Get_ADC_Value(&hadc1);
-
   /* Initialize I2C */
    I2C_HandleTypeDef hi2c;
    // Init the structure according to your controller settings
@@ -124,9 +122,9 @@ int main(void)
   while (1)
   {
 
-	    outputVoltage = Throttle_Get_Voltage(&hadc1);
-	    adc_val = Throttle_Get_ADC_Value(&hadc1);
-	    if (!MCP4725_setVoltage(&myDAC, outputVoltage , MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF))
+	    Throttle_Get_Voltage(&hadc1, &outputVoltage);
+	    Throttle_Get_ADC_Value(&hadc1, &adc_val);
+	    if(!MCP4725_setVoltage(&myDAC, outputVoltage , MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF))
 	    {
 	      /* Handle error */
 	    }

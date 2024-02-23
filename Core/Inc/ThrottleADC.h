@@ -15,9 +15,8 @@
 #define VMAX 4.2
 #define ADC_MAX_VALUE 4095.0
 
-void Throttle_Init(ADC_HandleTypeDef* hadc);
-uint32_t Throttle_Get_ADC_Value(ADC_HandleTypeDef* hadc);
-float Throttle_Get_Voltage(ADC_HandleTypeDef* hadc);
+void Throttle_Get_ADC_Value(ADC_HandleTypeDef* hadc, uint32_t* adc_val);
 
+void Throttle_Get_Voltage(ADC_HandleTypeDef* hadc, float* outputVoltage);
 
 #endif /* INC_THROTTLEADC_H_ */

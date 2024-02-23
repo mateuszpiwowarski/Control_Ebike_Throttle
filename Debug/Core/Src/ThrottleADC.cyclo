@@ -1,2 +1,2 @@
-../Core/Src/ThrottleADC.c:12:10:Throttle_Get_ADC_Value	1
-../Core/Src/ThrottleADC.c:23:7:Throttle_Get_Voltage	1
+../Core/Src/ThrottleADC.c:12:6:Throttle_Get_ADC_Value	1
+../Core/Src/ThrottleADC.c:21:6:Throttle_Get_Voltage	1
